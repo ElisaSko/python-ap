@@ -4,7 +4,7 @@ WHITE=(255,255,255)
 GREEN=(0,255,0)
 WIDTH=400
 HEIGHT=300
-TIME=1
+TIME=5
 LARGEUR=20
 LONGUEUR=3
 POS1=[10*LARGEUR,7*LARGEUR]
@@ -81,7 +81,7 @@ while execute==True:
     curseur=0
     while curseur<LONGUEUR:
         print(serpent)
-        pos=serpent[0]
+        pos=serpent[curseur]
         rect = pygame.Rect(pos[1], pos[0], LARGEUR, LARGEUR)
         pygame.draw.rect(screen, couleur, rect)
         curseur+=1
@@ -97,7 +97,7 @@ while execute==True:
             #if event.key==1073741906:#haut
             
 
-
+    print (serpent)
     pygame.display.update()
 
 pygame.quit()
