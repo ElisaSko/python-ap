@@ -91,6 +91,7 @@ while execute==True:
         #vérifier que le serpent ne sort pas du cadre
         if serpent[0][0]<0 and direction[0]==-1:
             execute=False
+        print(serpent)
         if serpent[0][0]>HEIGHT and direction[0]==1:
             execute=False
         if serpent[0][1]<0 and direction[1]==-1:
@@ -101,16 +102,16 @@ while execute==True:
     else :
         if serpent[0][0]<0 and direction[0]==-1:
             for i in range (longueur):
-                serpent[0][0]=serpent[0][0]+HEIGHT
+                serpent[i][0]=serpent[i][0]+HEIGHT
         if serpent[0][0]>HEIGHT and direction[0]==1:
             for i in range(longueur):
-                serpent[0][0]=serpent[0][0]-HEIGHT
+                serpent[i][0]=serpent[i][0]-HEIGHT
         if serpent[0][1]<0 and direction[1]==-1:
             for i in range(longueur):
-                serpent[0][1]=serpent[0][1]+WIDTH
+                serpent[i][1]=serpent[i][1]+WIDTH
         if serpent[0][1]>WIDTH and direction[1]==1:
             for i in range(longueur):
-                serpent[0][1]=serpent[0][1]-WIDTH
+                serpent[i][1]=serpent[i][1]-WIDTH
 
     #dessiner le damier :
     screen.fill( WHITE )
