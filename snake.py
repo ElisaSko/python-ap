@@ -1,7 +1,7 @@
 import pygame
 import random
 import argparse
-parser = argparse.ArgumentParser(description='1ère couleur du damier')
+parser = argparse.ArgumentParser(description='snake game')
 parser.add_argument('--bg_color_1', help="Permet de déterminer la 1ère couleur du damier."+
                     "Valeur du type #hexadecimal")
 args = parser.parse_args()
