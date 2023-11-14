@@ -1,5 +1,10 @@
 import pygame
 import random
+import argparse
+parser = argparse.ArgumentParser(description='1ère couleur du damier')
+parser.add_argument('--bg_color_1', help="Permet de déterminer la 1ère couleur du damier."+
+                    "Valeur du type #hexadecimal")
+args = parser.parse_args()
 
 #création des constantes
 BLACK=(0,0,0)
@@ -96,7 +101,7 @@ while execute==True:
 
     #dessiner le damier :
     screen.fill( WHITE )
-    color = BLACK
+    color = args.bg_color_1
     left=0
     #on dessine une rangée sur 2
     while left<WIDTH:
