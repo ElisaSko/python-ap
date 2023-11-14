@@ -22,6 +22,21 @@ while execute==True:
             if event.key == pygame.K_q :
                 execute=False
 
+        if event.type == pygame.KEYDOWN:
+            if event.key==pygame.K_RIGHT:#dte
+                serpent=[[serpent[0][0],serpent[0][1]+LARGEUR]]+serpent
+                serpent.pop()
+                print (serpent)
+            if event.key==1073741904:#gauche
+                serpent=[[serpent[0][0],serpent[0][1]-LARGEUR]]+serpent
+                serpent.pop()
+            if event.key==1073741905:#bas
+                serpent=[[serpent[0][0]+LARGEUR,serpent[0][1]]]+serpent
+                serpent.pop()
+            if event.key==1073741906:#haut
+                serpent=[[serpent[0][0]-LARGEUR,serpent[0][1]]]+serpent
+                serpent.pop()
+
     screen.fill( WHITE )
     color = BLACK
     left=0
