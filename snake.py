@@ -2,8 +2,9 @@ import pygame
 import random
 import argparse
 parser = argparse.ArgumentParser(description='snake game')
-parser.add_argument('--bg_color_1', help="Permet de déterminer la 1ère couleur du damier."+
+parser.add_argument('--bg-color-1', help="Permet de déterminer la 1ère couleur du damier."+
                     "Valeur du type #hexadecimal")
+parser.add_argument('--gameover-on-exit', help='flag : activer pour mourir quand on sort', action='store_true')
 args = parser.parse_args()
 
 #création des constantes
@@ -86,18 +87,31 @@ while execute==True:
                     serpent=[[serpent[0][0]-LARGEUR,serpent[0][1]]]+serpent
                     serpent.pop()
 
-   #vérifier que le serpent ne sort pas du cadre
-    if serpent[0][0]<0 and direction[0]==-1:
+    if args.gameover_on_exit :
+        #vérifier que le serpent ne sort pas du cadre
+        if serpent[0][0]<0 and direction[0]==-1:
             execute=False
-        
-    if serpent[0][0]>HEIGHT and direction[0]==1:
-        execute=False
-        
-    if serpent[0][1]<0 and direction[1]==-1:
-        execute=False
-        
-    if serpent[0][1]>WIDTH and direction[1]==1:
-        execute=False
+        print(serpent)
+        if serpent[0][0]>HEIGHT and direction[0]==1:
+            execute=False
+        if serpent[0][1]<0 and direction[1]==-1:
+            execute=False
+        if serpent[0][1]>WIDTH and direction[1]==1:
+            execute=False
+
+    else :
+        if serpent[0][0]<0 and direction[0]==-1:
+            for i in range (longueur):
+                serpent[i][0]=serpent[i][0]+HEIGHT
+        if serpent[0][0]>HEIGHT and direction[0]==1:
+            for i in range(longueur):
+                serpent[i][0]=serpent[i][0]-HEIGHT
+        if serpent[0][1]<0 and direction[1]==-1:
+            for i in range(longueur):
+                serpent[i][1]=serpent[i][1]+WIDTH
+        if serpent[0][1]>WIDTH and direction[1]==1:
+            for i in range(longueur):
+                serpent[i][1]=serpent[i][1]-WIDTH
 
     #dessiner le damier :
     screen.fill( WHITE )
