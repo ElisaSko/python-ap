@@ -1,6 +1,11 @@
 import pygame
 import random
 import argparse
+import logging
+import sys
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler(sys.stderr)
+logger.addHandler(handler)
 parser = argparse.ArgumentParser(description='snake game')
 parser.add_argument('--bg-color-1', help="Permet de déterminer la 1ère couleur du damier."+
                     "Valeur du type #hexadecimal")
@@ -21,6 +26,7 @@ parser.add_argument('--snake-length', help="Permet de déterminer la longueur in
 parser.add_argument('--tile-size', help="Permet de déterminer la taille d'un carreau du damier."+
                     "Valeur du type int")
 parser.add_argument('--gameover-on-exit', help='flag : activer pour mourir quand on sort', action='store_true')
+parser.add_argument('--debug', help='flag : activer pour messages de debug', action='store_true')
 args = parser.parse_args()
 
 #création des constantes
@@ -73,6 +79,10 @@ serpent = [POS3,POS2,POS1]
 #coordonnées de la pomme générées aléatoirement
 pomme1=random.randrange(0,HEIGHT,LARGEUR)
 pomme2=random.randrange(0,WIDTH,LARGEUR)
+
+#afficher messages de debug s'il faut
+if args.debug :
+    logger.setLevel(logging.DEBUG)
 
 pygame.init()
 screen = pygame.display.set_mode( (WIDTH, HEIGHT) )
