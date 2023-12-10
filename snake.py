@@ -4,6 +4,22 @@ import argparse
 parser = argparse.ArgumentParser(description='snake game')
 parser.add_argument('--bg-color-1', help="Permet de déterminer la 1ère couleur du damier."+
                     "Valeur du type #hexadecimal")
+parser.add_argument('--bg-color-2', help="Permet de déterminer la 2ème couleur du damier."+
+                    "Valeur du type #hexadecimal")
+parser.add_argument('--height', help="Permet de déterminer la hauteur du damier."+
+                    "Valeur du type int")
+parser.add_argument('--width', help="Permet de déterminer la largeur du damier."+
+                    "Valeur du type int")
+parser.add_argument('--fps', help="Permet de déterminer le nombre d'actions par seconde."+
+                    "Valeur du type int")
+parser.add_argument('--fruit-color', help="Permet de déterminer la couleur du fruit."+
+                    "Valeur du type #hexadecimal")
+parser.add_argument('--snake-color', help="Permet de déterminer la couleur du serpent."+
+                    "Valeur du type #hexadecimal")
+parser.add_argument('--snake-length', help="Permet de déterminer la longueur initiale du serpent."+
+                    "Valeur du type int")
+parser.add_argument('--tile-size', help="Permet de déterminer la taille d'un carreau du damier."+
+                    "Valeur du type int")
 parser.add_argument('--gameover-on-exit', help='flag : activer pour mourir quand on sort', action='store_true')
 args = parser.parse_args()
 
@@ -12,11 +28,11 @@ BLACK=(0,0,0)
 WHITE=(255,255,255)
 GREEN=(0,255,0)
 RED=(255,0,0)
-WIDTH=400
-HEIGHT=300
-TIME=5
-LARGEUR=20
-LONGUEUR=3
+WIDTH=int(args.width)
+HEIGHT=int(args.height)
+TIME=int(args.fps)
+LARGEUR=int(args.tile_size)
+LONGUEUR=int(args.snake_length)
 POS1=[10*LARGEUR,7*LARGEUR]
 POS2=[10*LARGEUR,8*LARGEUR]
 POS3=[10*LARGEUR,9*LARGEUR]
@@ -114,15 +130,16 @@ while execute==True:
                 serpent[i][1]=serpent[i][1]-WIDTH
 
     #dessiner le damier :
-    screen.fill( WHITE )
-    color = args.bg_color_1
+    color2=args.bg_color_2
+    screen.fill( color2 )
+    color1 = args.bg_color_1
     left=0
     #on dessine une rangée sur 2
     while left<WIDTH:
         top=0
         while top<HEIGHT:
             rect = pygame.Rect(left, top, LARGEUR, LARGEUR)
-            pygame.draw.rect(screen, color, rect)
+            pygame.draw.rect(screen, color1, rect)
             top+=40
         left+=40
     #puis le reste des rangées en décalant d'une colonne
@@ -131,13 +148,13 @@ while execute==True:
         top=20
         while top<HEIGHT:
             rect = pygame.Rect(left, top, LARGEUR, LARGEUR)
-            pygame.draw.rect(screen, color, rect)
+            pygame.draw.rect(screen, color1, rect)
             top+=40
         left+=40
     
 
     #dessiner le serpent
-    couleur=GREEN
+    couleur=args.snake_color
     while curseur<longueur:
         pos=serpent[curseur]
         rect = pygame.Rect(pos[1], pos[0], LARGEUR, LARGEUR)
@@ -154,12 +171,13 @@ while execute==True:
     
     #génère une nouvelle pomme
     if mange:
+        couleur_pomme=args.fruit_color
         serpent=[[pomme1,pomme2]]+serpent
         longueur+=1
         pomme1=random.randrange(0,HEIGHT,LARGEUR)
         pomme2=random.randrange(0,WIDTH,LARGEUR)
         rect = pygame.Rect(pomme1, pomme2, LARGEUR, LARGEUR)
-        pygame.draw.rect(screen, RED , rect)
+        pygame.draw.rect(screen, couleur_pomme , rect)
         mange=False
         
     #affiche le score
