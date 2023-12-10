@@ -37,6 +37,30 @@ POS1=[10*LARGEUR,7*LARGEUR]
 POS2=[10*LARGEUR,8*LARGEUR]
 POS3=[10*LARGEUR,9*LARGEUR]
 
+#vérification des arguments
+
+#tile_size divise height
+if HEIGHT % LARGEUR !=0 :
+    raise ValueError("Height must be a multiple of tile size")
+#tile_size divise width
+if WIDTH % LARGEUR !=0 :
+    raise ValueError("Width must be a multiple of tile size")
+#20 colonnes minimum
+MIN_COLUMNS = 20
+if  WIDTH//LARGEUR < MIN_COLUMNS :
+    raise ValueError("There must be at least %d columns" % MIN_COLUMNS)
+#12 lignes minimum
+MIN_ROWS = 12
+if HEIGHT//LARGEUR < MIN_ROWS :
+    raise ValueError("There must be at least %d rows" % MIN_ROWS)
+#longueur initiale du serpent plus grande que 2
+MIN_SIZE=2
+if LONGUEUR < MIN_SIZE:
+    raise ValueError("The initial size of the snake must be greater or equal to %d." % MIN_SIZE)
+#couleur du serpent et du damier différentes
+if args.snake_color == args.bg_color_1 or args.snake_color == args.bg_color_2 :
+    raise ValueError("Snake color must be different from checkboard color")
+
 #initialisation des variables
 longueur=LONGUEUR
 execute=True
@@ -140,17 +164,17 @@ while execute==True:
         while top<HEIGHT:
             rect = pygame.Rect(left, top, LARGEUR, LARGEUR)
             pygame.draw.rect(screen, color1, rect)
-            top+=40
-        left+=40
+            top+=2*LARGEUR
+        left+=2*LARGEUR
     #puis le reste des rangées en décalant d'une colonne
-    left=20
+    left=LARGEUR
     while left<WIDTH:
-        top=20
+        top=LARGEUR
         while top<HEIGHT:
             rect = pygame.Rect(left, top, LARGEUR, LARGEUR)
             pygame.draw.rect(screen, color1, rect)
-            top+=40
-        left+=40
+            top+=2*LARGEUR
+        left+=2*LARGEUR
     
 
     #dessiner le serpent
