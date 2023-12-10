@@ -88,6 +88,7 @@ pygame.init()
 screen = pygame.display.set_mode( (WIDTH, HEIGHT) )
 clock = pygame.time.Clock()
 
+logger.debug('Start main loop')
 
 while execute==True:
 
@@ -212,6 +213,7 @@ while execute==True:
         pomme2=random.randrange(0,WIDTH,LARGEUR)
         rect = pygame.Rect(pomme1, pomme2, LARGEUR, LARGEUR)
         pygame.draw.rect(screen, couleur_pomme , rect)
+        logger.debug('Snake has eaten a fruit')
         mange=False
         
     #affiche le score
@@ -220,3 +222,4 @@ while execute==True:
     pygame.display.update()
 
 pygame.quit()
+logger.debug('Game over')
