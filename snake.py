@@ -142,13 +142,17 @@ while execute==True:
         #vérifier que le serpent ne sort pas du cadre
         if serpent[0][0]<0 and direction[0]==-1:
             execute=False
+            logger.info('The snake exited the checkboard')
         print(serpent)
         if serpent[0][0]>HEIGHT and direction[0]==1:
             execute=False
+            logger.info('The snake exited the checkboard')
         if serpent[0][1]<0 and direction[1]==-1:
             execute=False
+            logger.info('The snake exited the checkboard')
         if serpent[0][1]>WIDTH and direction[1]==1:
             execute=False
+            logger.info('The snake exited the checkboard')
 
     else :
         if serpent[0][0]<0 and direction[0]==-1:
@@ -220,6 +224,12 @@ while execute==True:
     score=(longueur-3)*10
     pygame.display.set_caption("SCORE :"+str(score))
     pygame.display.update()
+
+    #gérer la collision
+    for e in serpent[1:] : 
+        if serpent [0]==e :
+            execute = False
+            logger.info('The snake collided itself')
 
 pygame.quit()
 logger.debug('Game over')
