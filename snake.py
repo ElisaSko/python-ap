@@ -3,6 +3,9 @@ import random
 import argparse
 import logging
 import sys
+import os
+import re
+
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stderr)
 logger.addHandler(handler)
@@ -27,6 +30,8 @@ parser.add_argument('--tile-size', help="Permet de déterminer la taille d'un ca
                     "Valeur du type int")
 parser.add_argument('--gameover-on-exit', help='flag : activer pour mourir quand on sort', action='store_true')
 parser.add_argument('--debug', help='flag : activer pour messages de debug', action='store_true')
+parser.add_argument('--high-scores-file', default=os.path.join(os.environ['HOME'], '.snake_scores.txt'))
+parser.add_argument('--max-high-scores', type=int, default=5)
 args = parser.parse_args()
 
 #création des constantes
@@ -233,3 +238,24 @@ while execute==True:
 
 pygame.quit()
 logger.debug('Game over')
+
+def compare_score(score):
+    rank=None
+    with open(args.high_scores_file, 'r') as myfile :
+        for line in myfile :
+            match=re.search('[0-9]', line)
+            start=match.start()
+            end=match.end()
+            s=int(line[start,end-1])
+            if score >=s:
+                rank=#a compléter
+                return (rank)
+
+def add_score(score, name):
+    with open(args.high_scores_file, 'w') as myfile :
+        print (f"{name} {':'} {score}", file=myfile)
+
+
+
+add_score('1', 'Elisa')
+compare_score(1)
