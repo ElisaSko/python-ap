@@ -108,8 +108,8 @@ def get_score(longueur) :
     return score
 
 def draw_fruit(screen, FRUIT_COLOR, pomme1, pomme2, LARGEUR, longueur):
-    rect = pygame.Rect(pomme1, pomme2, LARGEUR, LARGEUR)
-    pygame.draw.rect(screen, FRUIT_COLOR , rect)
+    rectangle = pygame.Rect(pomme1, pomme2, LARGEUR, LARGEUR)
+    pygame.draw.rect(screen, FRUIT_COLOR , rectangle)
 
 def draw_snake(screen,COULEUR, LARGEUR, serpent, longueur):
     curseur = 0
@@ -252,13 +252,9 @@ def main():
 
     logger.debug('Start main loop')
 
-    print(execute)
-
     while execute==True:
-
         clock.tick(TIME)
         serpent = move_snake(serpent,LARGEUR, direction)
-        print(serpent)
         (serpent, direction, execute, mange, pomme1, pomme2) = process_events(LARGEUR, GAME_OVER_ON_EXIT, longueur, HEIGHT, WIDTH, pomme1, pomme2, execute, serpent, mange, direction)
         update_display(screen, FRUIT_COLOR, COULEUR, COLOR1, COLOR2, HEIGHT, LARGEUR, WIDTH, pomme1, pomme2, serpent, longueur)
 
