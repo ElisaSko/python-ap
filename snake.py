@@ -10,23 +10,23 @@ logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stderr)
 logger.addHandler(handler)
 parser = argparse.ArgumentParser(description='snake game')
-parser.add_argument('--bg-color-1', help="Permet de déterminer la 1ère couleur du damier."+
+parser.add_argument('--bg-color-1', default="#FFFFFF", help="Permet de déterminer la 1ère couleur du damier."+
                     "Valeur du type #hexadecimal")
-parser.add_argument('--bg-color-2', help="Permet de déterminer la 2ème couleur du damier."+
+parser.add_argument('--bg-color-2', default="#000000", help="Permet de déterminer la 2ème couleur du damier."+
                     "Valeur du type #hexadecimal")
-parser.add_argument('--height', help="Permet de déterminer la hauteur du damier."+
+parser.add_argument('--height',default=400, help="Permet de déterminer la hauteur du damier."+
                     "Valeur du type int")
-parser.add_argument('--width', help="Permet de déterminer la largeur du damier."+
+parser.add_argument('--width', default=400, help="Permet de déterminer la largeur du damier."+
                     "Valeur du type int")
-parser.add_argument('--fps', help="Permet de déterminer le nombre d'actions par seconde."+
+parser.add_argument('--fps', default=5, help="Permet de déterminer le nombre d'actions par seconde."+
                     "Valeur du type int")
-parser.add_argument('--fruit-color', help="Permet de déterminer la couleur du fruit."+
+parser.add_argument('--fruit-color', default="#FF0000", help="Permet de déterminer la couleur du fruit."+
                     "Valeur du type #hexadecimal")
-parser.add_argument('--snake-color', help="Permet de déterminer la couleur du serpent."+
+parser.add_argument('--snake-color', default="#00FF00", help="Permet de déterminer la couleur du serpent."+
                     "Valeur du type #hexadecimal")
-parser.add_argument('--snake-length', help="Permet de déterminer la longueur initiale du serpent."+
+parser.add_argument('--snake-length', default=3, help="Permet de déterminer la longueur initiale du serpent."+
                     "Valeur du type int")
-parser.add_argument('--tile-size', help="Permet de déterminer la taille d'un carreau du damier."+
+parser.add_argument('--tile-size', default=20,help="Permet de déterminer la taille d'un carreau du damier."+
                     "Valeur du type int")
 parser.add_argument('--gameover-on-exit', help='flag : activer pour mourir quand on sort', action='store_true')
 parser.add_argument('--debug', help='flag : activer pour messages de debug', action='store_true')
@@ -44,6 +44,7 @@ HEIGHT=int(args.height)
 TIME=int(args.fps)
 LARGEUR=int(args.tile_size)
 LONGUEUR=int(args.snake_length)
+max_scores=int(args.max_high_scores)
 POS1=[10*LARGEUR,7*LARGEUR]
 POS2=[10*LARGEUR,8*LARGEUR]
 POS3=[10*LARGEUR,9*LARGEUR]
@@ -248,14 +249,40 @@ def compare_score(score):
             end=match.end()
             s=int(line[start,end-1])
             if score >=s:
-                rank=#a compléter
+                #rank=#a compléter
                 return (rank)
 
-def add_score(score, name):
+def add_score(score, name, rank, max_scores):
+    with open(args.high_scores_file, 'r') as myfile :
+        i=0
+        d={}
+        ajout=False
+        for line in myfile :
+            if line !="\n" :
+                i=i+1
+                if i==rank :
+                    d[i]=name+':'+score
+                else : 
+                    d[i]=line
+        if i<rank :
+            ajout=True
     with open(args.high_scores_file, 'w') as myfile :
-        print (f"{name} {':'} {score}", file=myfile)
+        myfile.truncate()
+        print(d)
+        print(ajout)
+        for i in range(1,min(len(d)+1,max_scores+1)) :
+            print(d[i])
+            print(d[i], file=myfile)
+        if ajout :
+            print(name+':'+score, file=myfile)
+        #print (f"{name} {':'} {score}", file=myfile)
 
 
 
-add_score('1', 'Elisa')
-compare_score(1)
+add_score('1', 'Elisa', 1, max_scores)
+add_score('2', 'Elisa', 2, max_scores)
+add_score('3', 'Elisa', 3, max_scores)
+add_score('4', 'Elisa', 4, max_scores)
+add_score('5', 'Elisa', 5, max_scores)
+add_score('6', 'Elisa', 6, max_scores)
+#compare_score(1)
