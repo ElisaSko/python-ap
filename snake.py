@@ -207,8 +207,9 @@ while execute==True:
         curseur+=1
     curseur=0
 
+    couleur_pomme=args.fruit_color
     rect = pygame.Rect(pomme2, pomme1, LARGEUR, LARGEUR)
-    pygame.draw.rect(screen, RED , rect)
+    pygame.draw.rect(screen, couleur_pomme , rect)
     
     #détecte quand le serpent mange la pomme 
     if serpent[0]==[pomme1,pomme2]:
@@ -216,13 +217,14 @@ while execute==True:
     
     #génère une nouvelle pomme
     if mange:
-        couleur_pomme=args.fruit_color
-        serpent=[[pomme1,pomme2]]+serpent
+        queue=serpent[longueur-1]
+        nv_queue=[queue[0]-LARGEUR*direction[0],queue[1]-LARGEUR*direction[1]]
+        serpent=serpent+[nv_queue]
         longueur+=1
         pomme1=random.randrange(0,HEIGHT,LARGEUR)
         pomme2=random.randrange(0,WIDTH,LARGEUR)
-        rect = pygame.Rect(pomme1, pomme2, LARGEUR, LARGEUR)
-        pygame.draw.rect(screen, couleur_pomme , rect)
+        #rect = pygame.Rect(pomme1, pomme2, LARGEUR, LARGEUR)
+        #pygame.draw.rect(screen,  , rect)
         logger.debug('Snake has eaten a fruit')
         mange=False
         
@@ -234,23 +236,27 @@ while execute==True:
     #gérer la collision
     for e in serpent[1:] : 
         if serpent [0]==e :
+            print(serpent, e)
             execute = False
             logger.info('The snake collided itself')
 
-pygame.quit()
-logger.debug('Game over')
-
 def compare_score(score):
-    rank=None
+    rank=1
     with open(args.high_scores_file, 'r') as myfile :
         for line in myfile :
-            match=re.search('[0-9]', line)
-            start=match.start()
-            end=match.end()
-            s=int(line[start,end-1])
-            if score >=s:
-                #rank=#a compléter
-                return (rank)
+            if line !="\n" :
+                match=re.search('[0-9]', line)
+                print(line)
+                start=match.start()
+                print(start)
+                end=match.end()
+                print(end)
+                print(line[start:end+1])
+                s=int(line[start:end+1])
+                if score >=s:
+                    return (rank)
+                rank=rank+1
+    return (rank)
 
 def add_score(score, name, rank, max_scores):
     with open(args.high_scores_file, 'r') as myfile :
@@ -258,10 +264,13 @@ def add_score(score, name, rank, max_scores):
         d={}
         ajout=False
         for line in myfile :
-            if line !="\n" :
+            if line !="\n" and line !="" :
+                line.strip("\n")
                 i=i+1
                 if i==rank :
                     d[i]=name+':'+score
+                    d[i+1]=line
+                    i=i+1
                 else : 
                     d[i]=line
         if i<rank :
@@ -269,16 +278,22 @@ def add_score(score, name, rank, max_scores):
     with open(args.high_scores_file, 'w') as myfile :
         myfile.truncate()
         print(d)
-        print(ajout)
         for i in range(1,min(len(d)+1,max_scores+1)) :
-            print(d[i])
             print(d[i], file=myfile)
         if ajout :
             print(name+':'+score, file=myfile)
         #print (f"{name} {':'} {score}", file=myfile)
 
 
+pygame.quit()
+logger.debug('Game over')
+rank=compare_score(score)
+if rank <= max_scores :
+    name=input("Entrez votre nom : ")
+    add_score(str(score), name , rank, max_scores) 
 
+
+"""
 add_score('1', 'Elisa', 1, max_scores)
 add_score('2', 'Elisa', 2, max_scores)
 add_score('3', 'Elisa', 3, max_scores)
@@ -286,3 +301,4 @@ add_score('4', 'Elisa', 4, max_scores)
 add_score('5', 'Elisa', 5, max_scores)
 add_score('6', 'Elisa', 6, max_scores)
 #compare_score(1)
+"""
