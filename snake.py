@@ -15,23 +15,23 @@ logger.addHandler(handler)
 parser = argparse.ArgumentParser(description='snake game')
 
 def read_args():
-    parser.add_argument('--bg-color-1', help="Permet de déterminer la 1ère couleur du damier."+
+    parser.add_argument('--bg-color-1', default="#FFFFFF", help="Permet de déterminer la 1ère couleur du damier."+
+                    "Valeur du type #hexadecimal")
+    parser.add_argument('--bg-color-2', default="#000000", help="Permet de déterminer la 2ème couleur du damier."+
                         "Valeur du type #hexadecimal")
-    parser.add_argument('--bg-color-2', help="Permet de déterminer la 2ème couleur du damier."+
+    parser.add_argument('--height',default=400, help="Permet de déterminer la hauteur du damier."+
+                        "Valeur du type int")
+    parser.add_argument('--width', default=400, help="Permet de déterminer la largeur du damier."+
+                        "Valeur du type int")
+    parser.add_argument('--fps', default=5, help="Permet de déterminer le nombre d'actions par seconde."+
+                        "Valeur du type int")
+    parser.add_argument('--fruit-color', default="#FF0000", help="Permet de déterminer la couleur du fruit."+
                         "Valeur du type #hexadecimal")
-    parser.add_argument('--height', help="Permet de déterminer la hauteur du damier."+
-                        "Valeur du type int")
-    parser.add_argument('--width', help="Permet de déterminer la largeur du damier."+
-                        "Valeur du type int")
-    parser.add_argument('--fps', help="Permet de déterminer le nombre d'actions par seconde."+
-                        "Valeur du type int")
-    parser.add_argument('--fruit-color', help="Permet de déterminer la couleur du fruit."+
+    parser.add_argument('--snake-color', default="#00FF00", help="Permet de déterminer la couleur du serpent."+
                         "Valeur du type #hexadecimal")
-    parser.add_argument('--snake-color', help="Permet de déterminer la couleur du serpent."+
-                        "Valeur du type #hexadecimal")
-    parser.add_argument('--snake-length', help="Permet de déterminer la longueur initiale du serpent."+
+    parser.add_argument('--snake-length', default=3, help="Permet de déterminer la longueur initiale du serpent."+
                         "Valeur du type int")
-    parser.add_argument('--tile-size', help="Permet de déterminer la taille d'un carreau du damier."+
+    parser.add_argument('--tile-size', default=20,help="Permet de déterminer la taille d'un carreau du damier."+
                         "Valeur du type int")
     parser.add_argument('--gameover-on-exit', help='flag : activer pour mourir quand on sort', action='store_true')
     parser.add_argument('--debug', help='flag : activer pour messages de debug', action='store_true')
@@ -108,7 +108,7 @@ def get_score(longueur) :
     return score
 
 def draw_fruit(screen, FRUIT_COLOR, pomme1, pomme2, LARGEUR, longueur):
-    rectangle = pygame.Rect(pomme1, pomme2, LARGEUR, LARGEUR)
+    rectangle = pygame.Rect(pomme2, pomme1, LARGEUR, LARGEUR)
     pygame.draw.rect(screen, FRUIT_COLOR , rectangle)
 
 def draw_snake(screen,COULEUR, LARGEUR, serpent, longueur):
@@ -203,10 +203,14 @@ def process_events(LARGEUR, GAME_OVER_ON_EXIT, longueur, HEIGHT, WIDTH, pomme1, 
                 serpent[i][1]=serpent[i][1]-WIDTH
     
     #détecte quand le serpent mange la pomme 
+    print((pomme1,pomme2))
+    print(serpent[0], 'serpent')
     if serpent[0]==[pomme1,pomme2]:
+        print("mange")
         mange=True
 
     if mange :  
+        print ("mangeeeeeeeeeeeee")
         (pomme1, pomme2) = update_fruit(HEIGHT, LARGEUR, WIDTH)
         serpent=[[pomme1,pomme2]]+serpent
         longueur+=1
@@ -256,6 +260,7 @@ def main():
         clock.tick(TIME)
         serpent = move_snake(serpent,LARGEUR, direction)
         (serpent, direction, execute, mange, pomme1, pomme2) = process_events(LARGEUR, GAME_OVER_ON_EXIT, longueur, HEIGHT, WIDTH, pomme1, pomme2, execute, serpent, mange, direction)
+        print (pomme1,pomme2)
         update_display(screen, FRUIT_COLOR, COULEUR, COLOR1, COLOR2, HEIGHT, LARGEUR, WIDTH, pomme1, pomme2, serpent, longueur)
 
     pygame.quit()
