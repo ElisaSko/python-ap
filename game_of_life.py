@@ -7,8 +7,8 @@ parser.add_argument('-o', default= 'my_output_file.txt',type=str, help='output f
 parser.add_argument('--width', default= 800, type=int, help='width of the grid')
 parser.add_argument('--height', default= 600, type=int, help='height of the grid')
 parser.add_argument('-m', default= 20, type=int, help='number of iterations')
-parser.add_argument('--cell_width', default= 100, type=int, help='width of a cell')
-parser.add_argument('--cell_height', default= 100, type=int, help='height of a cell')
+parser.add_argument('--cell_width', default= 10, type=int, help='width of a cell')
+parser.add_argument('--cell_height', default= 10, type=int, help='height of a cell')
 parser.add_argument('--alive_color', default= '#000000', help='color of a living cell, hexadecimal value')
 parser.add_argument('--dead_color', default= '#FFFFFF', help='color of a dead cell, hexadecimal value')
 args = parser.parse_args()
@@ -142,7 +142,7 @@ class Display :
         for l in set_of_cells.cells:
             for cell in l:
                 if cell.alive:
-                    rect = pygame.Rect(cell.x*self.cell_height,cell.y*self.cell_width, self.cell_height, self.cell_width)
+                    rect = pygame.Rect(cell.y*self.cell_height,cell.x*self.cell_width, self.cell_height, self.cell_width)
                     pygame.draw.rect(self.screen, self.alive_color, rect)
         pygame.display.update()
     
