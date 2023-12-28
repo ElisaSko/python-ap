@@ -13,6 +13,32 @@ class Cell :
         self.x = x
         self.y = y
         self.alive = alive
+    
+    def neighbours(self, set_of_cells):
+        neighbours=[]
+        for x in range(self.x-1, self.x+2):
+            for y in range(self.y-1, self.y+2):
+                if x >= 0 and x < set_of_cells.height and y >= 0 and y < set_of_cells.width and (x != self.x or y != self.y):
+                    neighbours.append(set_of_cells.cells[x][y])
+
+    def count_neighbours(self, set_of_cells):
+        neighbours = self.neighbours(set_of_cells)
+        count = 0
+        for cell in neighbours:
+            if cell.alive:
+                count += 1
+        return count
+    
+    def update (self, set_of_cells):
+        number = self.count_neighbours(set_of_cells)
+        if self.alive:
+            if number = 2 or number = 3:
+                self.alive = True
+            else :
+                self.alive = False
+        else:
+            if number == 3:
+                self.alive = True
 
 class Set_of_cells  :
     def __init__(self, cells, height, width):
