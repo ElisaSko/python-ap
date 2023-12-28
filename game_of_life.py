@@ -31,9 +31,19 @@ class Set_of_cells  :
             self.cells.append(line)
         for cell in pattern.cells:
             self.cells[cell.x][cell.y].alive = cell.alive
+    
+    def output(self, file_name):
+        file = open(file_name, 'w')
+        for x in range(self.height):
+            for y in range(self.width):
+                if self.cells[x][y].alive:
+                    file.write('1')
+                else:
+                    file.write('0')
+            file.write('\n')
+        file.close()
 
-    
-    
+      
 class Pattern :
     def __init__(self, cells, height, width):
         self.cells = cells
@@ -51,7 +61,7 @@ class Pattern :
         for x in range(self.height):
             line = []
             for y in range(self.width):
-                if lines[x][y] == 'O':
+                if lines[x][y] == '0':
                     line.append(Cell(x, y, False))
                 if lines[x][y]=='1':
                     line.append(Cell(x, y, True))
