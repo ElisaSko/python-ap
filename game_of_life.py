@@ -11,6 +11,8 @@ parser.add_argument('--cell_width', default= 10, type=int, help='width of a cell
 parser.add_argument('--cell_height', default= 10, type=int, help='height of a cell')
 parser.add_argument('--alive_color', default= '#000000', help='color of a living cell, hexadecimal value')
 parser.add_argument('--dead_color', default= '#FFFFFF', help='color of a dead cell, hexadecimal value')
+parser.add_argument('--time', default= 5, type=int, help='number of frames per second')
+parser.add_argument('-d', help='flag : activate to display', action='store_true')
 args = parser.parse_args()
 
 class Cell :
@@ -18,9 +20,6 @@ class Cell :
         self.x = x
         self.y = y
         self.alive = alive
-    
-    '''def __str__(self):
-        return str(int(self.alive))'''
     
     def neighbours(self, set_of_cells):
         neighbours=[]
@@ -50,21 +49,10 @@ class Cell :
                 self.alive = True
 
 class Set_Of_Cells  :
-    def __init__(self, cells, height=args.height, width=args.width, iteration=0):
+    def __init__(self, cells, height=args.height, width=args.width):
         self.cells = cells
         self.height = height
         self.width = width
-        self.iteration = iteration
-
-    '''
-    def __str__(self):
-        c=''
-        for l in self.cells:
-            for cell in l:
-                c+=str(cell)
-            c+='\n'
-        return c
-    '''
 
     def initialize(self, height, width, pattern):
         self.height = height
@@ -79,16 +67,11 @@ class Set_Of_Cells  :
             for cell in l:
                 self.cells[cell.x][cell.y].alive = cell.alive
         
-    def update(self, pattern, height, width, max_iteration, output_file, input_file):
-        #if self.iteration == 0:
-            #self.initialize(self, height, width, pattern)
-        if self.iteration < max_iteration:
-            for x in range(self.height):
+        
+    def update(self, height, width):
+        for x in range(self.height):
                 for y in range(self.width):
                     self.cells[x][y].update(self)
-            self.iteration += 1
-        elif self.iteration == max_iteration:
-            self.output(self,output_file)
     
     def output(self, file_name):
         file = open(file_name, 'w')
@@ -126,8 +109,8 @@ class Pattern :
             self.cells.append(line)
 
 class Display :
-    def __init__(self, size, height, width, cell_height, cell_width, set_of_cells,alive_color,dead_color):
-        self.size = size
+    def __init__(self, time, height, width, cell_height, cell_width, set_of_cells,
+                 alive_color, dead_color):
         self.cell_height = cell_height
         self.cell_width = cell_width
         self.set_of_cells = set_of_cells
@@ -135,6 +118,7 @@ class Display :
         self.width = width
         self.alive_color = alive_color
         self.dead_color = dead_color
+        self.time = time
         self.screen = pygame.display.set_mode((self.width, self.height))
     
     def draw(self, set_of_cells):
@@ -142,27 +126,55 @@ class Display :
         for l in set_of_cells.cells:
             for cell in l:
                 if cell.alive:
-                    rect = pygame.Rect(cell.y*self.cell_height,cell.x*self.cell_width, self.cell_height, self.cell_width)
+                    rect = pygame.Rect(cell.y*self.cell_height,cell.x*self.cell_width, 
+                                       self.cell_height, self.cell_width)
                     pygame.draw.rect(self.screen, self.alive_color, rect)
         pygame.display.update()
     
     def display(self, set_of_cells):
-        #print(set_of_cells.cells)
+        pygame.init()
+        clock = pygame.time.Clock()
         execute = True
         while execute:
+            clock.tick(self.time)
             self.draw(set_of_cells)
+            set_of_cells.update(self.height, self.width) 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     execute = False
         pygame.quit()
         
+class Game_Of_Life :
+    def __init__(self, time=args.time, height=args.height, width=args.width, 
+                 cell_height=args.cell_height, cell_width=args.cell_width, 
+                 max_iteration=args.m, output_file=args.o, input_file=args.i, 
+                 alive_color=args.alive_color, dead_color=args.dead_color, display=args.d):
+        self.time = time
+        self.height = height
+        self.width = width
+        self.cell_height = cell_height
+        self.cell_width = cell_width
+        self.max_iteration = max_iteration
+        self.output_file = output_file
+        self.input_file = input_file
+        self.alive_color = alive_color
+        self.dead_color = dead_color
+        self.display = display
+    
+    def run(self):
+        pattern = Pattern([], 0, 0)
+        pattern.load(self.input_file)
+        set_of_cells = Set_Of_Cells([], 0, 0)
+        set_of_cells.initialize(self.height//self.cell_height, self.width//self.cell_width, 
+                                    pattern)
+        if self.display:
+            display = Display(self.time, self.height, self.width, self.cell_height, 
+                              self.cell_width, set_of_cells, self.alive_color, self.dead_color)
+            display.display(set_of_cells)
+        else:
+            for i in range(self.max_iteration):
+                set_of_cells.update(self.height//self.cell_height, self.width//self.cell_width)
+            set_of_cells.output(self.output_file)
 
-pattern = Pattern([], 0, 0)
-pattern.load(args.i)
-set_of_cells = Set_Of_Cells([], 0, 0, 0)
-set_of_cells.initialize(pattern.height, pattern.width, pattern)
-#set_of_cells.update(pattern, args.height, args.width, 1, args.o, args.i)
-set_of_cells.output(args.o)
-pygame.init()
-display = Display((args.width, args.height), args.height, args.width, args.cell_height, args.cell_width, set_of_cells, args.alive_color, args.dead_color)
-display.display(set_of_cells)
+game_of_life=Game_Of_Life()
+game_of_life.run()
