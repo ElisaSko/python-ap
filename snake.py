@@ -144,35 +144,36 @@ while execute==True:
                     serpent=[[serpent[0][0]-LARGEUR,serpent[0][1]]]+serpent
                     serpent.pop()
 
-    if args.gameover_on_exit :
-        #vérifier que le serpent ne sort pas du cadre
-        if serpent[0][0]<0 and direction[0]==-1:
+    #vérifier que le serpent ne sort pas du cadre
+    if serpent[0][0]<0 and direction[0]==-1:
+        if args.gameover_on_exit :
             execute=False
             logger.info('The snake exited the checkboard')
-        print(serpent)
-        if serpent[0][0]>HEIGHT and direction[0]==1:
-            execute=False
-            logger.info('The snake exited the checkboard')
-        if serpent[0][1]<0 and direction[1]==-1:
-            execute=False
-            logger.info('The snake exited the checkboard')
-        if serpent[0][1]>WIDTH and direction[1]==1:
-            execute=False
-            logger.info('The snake exited the checkboard')
-
-    else :
-        if serpent[0][0]<0 and direction[0]==-1:
+        else :
             for i in range (longueur):
                 serpent[i][0]=serpent[i][0]+HEIGHT
-        if serpent[0][0]>HEIGHT and direction[0]==1:
-            for i in range(longueur):
+    if serpent[0][0]>HEIGHT and direction[0]==1:
+        if args.gameover_on_exit :
+            execute=False
+            logger.info('The snake exited the checkboard')
+        else :
+            for i in range (longueur):
                 serpent[i][0]=serpent[i][0]-HEIGHT
-        if serpent[0][1]<0 and direction[1]==-1:
-            for i in range(longueur):
+    if serpent[0][1]<0 and direction[1]==-1:
+        if args.gameover_on_exit :
+            execute=False
+            logger.info('The snake exited the checkboard')
+        else :
+            for i in range (longueur):
                 serpent[i][1]=serpent[i][1]+WIDTH
-        if serpent[0][1]>WIDTH and direction[1]==1:
-            for i in range(longueur):
+    if serpent[0][1]>WIDTH and direction[1]==1:
+        if args.gameover_on_exit :
+            execute=False
+            logger.info('The snake exited the checkboard')
+        else :
+            for i in range (longueur):
                 serpent[i][1]=serpent[i][1]-WIDTH
+
 
     #dessiner le damier :
     color2=args.bg_color_2
