@@ -66,6 +66,7 @@ class Set_Of_Cells  :
             for x in range(self.height):
                 for y in range(self.width):
                     self.cells[x][y].update(self)
+            self.iteration += 1
         elif self.iteration == max_iteration:
             self.output(self,output_file)
     
