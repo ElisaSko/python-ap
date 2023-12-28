@@ -1,0 +1,58 @@
+import argparse
+
+parser = argparse.ArgumentParser(description='game of life')
+parser.add_argument('-i', default = 'my_input_file.txt', type=str, help='input file')
+parser.add_argument('-o', default= 'my_output_file.txt',type=str, help='output file')
+parser.add_argument('--width', default= 800, type=int, help='width of the grid')
+parser.add_argument('--height', default= 600, type=int, help='height of the grid')
+parser.add_argument('-m', default= 20, type=int, help='number of iterations')
+args = parser.parse_args()
+
+class Cell :
+    def __init__(self, x, y, alive):
+        self.x = x
+        self.y = y
+        self.alive = alive
+
+class Set_of_cells  :
+    def __init__(self, cells, height, width):
+        self.cells = cells
+        self.height = height
+        self.width = width
+    
+    def initialize(self, height, width, pattern):
+        self.height = height
+        self.width = width
+        self.cells = []
+        for x in range(self.height):
+            line = []
+            for y in range(self.width):
+                line.append(Cell(x, y, False))
+            self.cells.append(line)
+        for cell in pattern.cells:
+            self.cells[cell.x][cell.y].alive = cell.alive
+
+    
+    
+class Pattern :
+    def __init__(self, cells, height, width):
+        self.cells = cells
+        self.height = height
+        self.width = width
+    
+    def load(self, file_name):
+        file = open(file_name, 'r')
+        lines = file.readlines()
+        file.close()
+
+        self.height = len(lines)
+        self.width = len(lines[0]) - 1
+        self.cells = []
+        for x in range(self.height):
+            line = []
+            for y in range(self.width):
+                if lines[x][y] == 'O':
+                    line.append(Cell(x, y, False))
+                if lines[x][y]=='1':
+                    line.append(Cell(x, y, True))
+            self.cells.append(line)
