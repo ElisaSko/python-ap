@@ -1,4 +1,5 @@
 import argparse
+import pygame
 
 parser = argparse.ArgumentParser(description='game of life')
 parser.add_argument('-i', default = 'my_input_file.txt', type=str, help='input file')
@@ -20,6 +21,7 @@ class Cell :
             for y in range(self.y-1, self.y+2):
                 if x >= 0 and x < set_of_cells.height and y >= 0 and y < set_of_cells.width and (x != self.x or y != self.y):
                     neighbours.append(set_of_cells.cells[x][y])
+        return neighbours
 
     def count_neighbours(self, set_of_cells):
         neighbours = self.neighbours(set_of_cells)
@@ -32,7 +34,7 @@ class Cell :
     def update (self, set_of_cells):
         number = self.count_neighbours(set_of_cells)
         if self.alive:
-            if number = 2 or number = 3:
+            if number == 2 or number == 3:
                 self.alive = True
             else :
                 self.alive = False
@@ -56,12 +58,13 @@ class Set_Of_Cells  :
             for y in range(self.width):
                 line.append(Cell(x, y, False))
             self.cells.append(line)
-        for cell in pattern.cells:
-            self.cells[cell.x][cell.y].alive = cell.alive
+        for l in pattern.cells:
+            for cell in l:
+                self.cells[cell.x][cell.y].alive = cell.alive
         
     def update(self, pattern, height, width, max_iteration, output_file, input_file):
-        if self.iteration == 0:
-            self.initialize(self, height, width, pattern)
+        #if self.iteration == 0:
+            #self.initialize(self, height, width, pattern)
         if self.iteration < max_iteration:
             for x in range(self.height):
                 for y in range(self.width):
@@ -104,3 +107,11 @@ class Pattern :
                 if lines[x][y]=='1':
                     line.append(Cell(x, y, True))
             self.cells.append(line)
+
+
+pattern = Pattern([], 0, 0)
+pattern.load(args.i)
+set_of_cells = Set_Of_Cells([], 0, 0, 0)
+set_of_cells.initialize(pattern.height, pattern.width, pattern)
+set_of_cells.update(pattern, args.height, args.width, 1, args.o, args.i)
+set_of_cells.output(args.o)
