@@ -11,6 +11,7 @@ parser.add_argument('--cell_width', default= 10, type=int, help='width of a cell
 parser.add_argument('--cell_height', default= 10, type=int, help='height of a cell')
 parser.add_argument('--alive_color', default= '#000000', help='color of a living cell, hexadecimal value')
 parser.add_argument('--dead_color', default= '#FFFFFF', help='color of a dead cell, hexadecimal value')
+parser.add_argument('--time', default= 10, type=int, help='time between two frames')
 args = parser.parse_args()
 
 class Cell :
@@ -79,9 +80,7 @@ class Set_Of_Cells  :
             for cell in l:
                 self.cells[cell.x][cell.y].alive = cell.alive
         
-    def update(self, pattern, height, width, max_iteration, output_file, input_file):
-        #if self.iteration == 0:
-            #self.initialize(self, height, width, pattern)
+    def update(self, height, width, max_iteration, output_file, input_file):
         if self.iteration < max_iteration:
             for x in range(self.height):
                 for y in range(self.width):
@@ -126,7 +125,7 @@ class Pattern :
             self.cells.append(line)
 
 class Display :
-    def __init__(self, size, height, width, cell_height, cell_width, set_of_cells,alive_color,dead_color):
+    def __init__(self, time, size, height, width, cell_height, cell_width, set_of_cells,alive_color,dead_color):
         self.size = size
         self.cell_height = cell_height
         self.cell_width = cell_width
@@ -135,6 +134,7 @@ class Display :
         self.width = width
         self.alive_color = alive_color
         self.dead_color = dead_color
+        self.time = time
         self.screen = pygame.display.set_mode((self.width, self.height))
     
     def draw(self, set_of_cells):
@@ -147,10 +147,13 @@ class Display :
         pygame.display.update()
     
     def display(self, set_of_cells):
-        #print(set_of_cells.cells)
+        pygame.init()
+        clock = pygame.time.Clock()
         execute = True
         while execute:
+            clock.tick(self.time)
             self.draw(set_of_cells)
+            set_of_cells.update(self.height, self.width, args.m, args.o, args.i)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     execute = False
@@ -163,6 +166,6 @@ set_of_cells = Set_Of_Cells([], 0, 0, 0)
 set_of_cells.initialize(pattern.height, pattern.width, pattern)
 #set_of_cells.update(pattern, args.height, args.width, 1, args.o, args.i)
 set_of_cells.output(args.o)
-pygame.init()
-display = Display((args.width, args.height), args.height, args.width, args.cell_height, args.cell_width, set_of_cells, args.alive_color, args.dead_color)
+
+display = Display(args.time,(args.width, args.height), args.height, args.width, args.cell_height, args.cell_width, set_of_cells, args.alive_color, args.dead_color)
 display.display(set_of_cells)
