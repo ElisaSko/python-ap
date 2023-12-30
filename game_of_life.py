@@ -1,5 +1,6 @@
 import argparse
 import pygame
+import copy
 
 parser = argparse.ArgumentParser(description='game of life')
 parser.add_argument('-i', default = 'my_input_file.txt', type=str, help='input file')
@@ -48,6 +49,9 @@ class Cell :
             if number == 3:
                 self.alive = True
 
+
+
+
 class Set_Of_Cells  :
     def __init__(self, cells, height=args.height, width=args.width):
         self.cells = cells
@@ -66,12 +70,13 @@ class Set_Of_Cells  :
         for l in pattern.cells:
             for cell in l:
                 self.cells[cell.x][cell.y].alive = cell.alive
-        
+   
         
     def update(self, height, width):
+        set_prov=copy.deepcopy(self)
         for x in range(self.height):
                 for y in range(self.width):
-                    self.cells[x][y].update(self)
+                    self.cells[x][y].update(set_prov)
     
     def output(self, file_name):
         file = open(file_name, 'w')
@@ -126,7 +131,7 @@ class Display :
         for l in set_of_cells.cells:
             for cell in l:
                 if cell.alive:
-                    rect = pygame.Rect(cell.y*self.cell_height,cell.x*self.cell_width, 
+                    rect = pygame.Rect(cell.x*self.cell_height,cell.y*self.cell_width, 
                                        self.cell_height, self.cell_width)
                     pygame.draw.rect(self.screen, self.alive_color, rect)
         pygame.display.update()
