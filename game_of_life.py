@@ -110,7 +110,7 @@ class Set_Of_Cells  :
                     file.write('0')
             file.write('\n')
         file.close()
-        logger.info('Output written in output file')
+        logger.debug('Output written in output file')
 
       
 class Pattern :
@@ -139,7 +139,7 @@ class Pattern :
                     line.append(Cell(x, y, True))
             self.cells.append(line)
         
-        logger.info('Pattern loaded from input file')
+        logger.debug('Pattern loaded from input file')
 
 class Display :
     def __init__(self, time, height, width, cell_height, cell_width, set_of_cells,
