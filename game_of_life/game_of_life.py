@@ -76,6 +76,16 @@ class Set_Of_Cells  :
         #we check that the pattern is smaller than the grid
         if pattern.height > self.height or pattern.width > self.width:
             logger.error('The pattern is too big for the grid')
+            raise ValueError('The pattern is too big for the grid')
+        
+        #we check that the size of the grid is a strictly positive integer
+        if self.height <= 0 or self.width <= 0:
+            logger.error('The size of the grid must be strictly positive')
+            raise ValueError('The size of the grid must be strictly positive')
+        
+        if self.height != int(self.height) or self.width != int(self.width):
+            logger.error('The size of the grid must be an integer')
+            raise ValueError('The size of the grid must be an integer')
         
         #initializes the set of cells with the pattern :
         #adjusts the dimensions by adding dead cells around the pattern
