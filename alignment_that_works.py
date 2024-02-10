@@ -65,6 +65,47 @@ def Needleman_Wunsch(seq, var):
                 dte=l[i][j-1]+(-2)
                 diag=l[i-1][j-1]+matchscore
                 l[i][j]=max(sup, dte, diag)
-    print(l)
+    return(l)
 
-Needleman_Wunsch('ATGC','ATGA')
+print(Needleman_Wunsch('ATGC','ATGA'))
+
+def remonte_chemin(seq,var):#TODO the scores list isn't +1, -1 or -2 : change that
+    tab=Needleman_Wunsch(seq,var)
+    scores=[]
+    i=len(seq)-1
+    j=len(var)-1
+    while i>0 and j>0:
+        up=tab[i-1][j]
+        left=tab[i][j-1]
+        diag=tab[i-1][j-1]
+        next = max(up,left,diag)
+        if next == diag:
+            scores.append(tab[i][j]-tab[i-1][j-1]) #TODO returns 0 sometimes
+            i=i-1
+            j=j-1
+        elif next == up:
+            scores.append(tab[i][j]-tab[i-1][j])
+            i=i-1
+        elif next == left:
+            scores.append(tab[i][j]-tab[i][j-1])
+            j=j-1
+    return scores
+
+def alignment(seq,var):#doesn't work (bc of the scores list too)
+    scores=remonte_chemin(seq,var)
+    seq_align=''
+    var_align=''
+    for i in range(len(scores)):
+        if scores[i]==1:
+            seq_align=seq_align+seq[i]
+            var_align=var_align+var[i]
+        elif scores[i]==-1:
+            seq_align=seq_align+'-'
+            var_align=var_align+var[i]
+        elif scores[i]==-2:
+            seq_align=seq_align+seq[i]
+            var_align=var_align+'-'
+    return(seq_align,var_align)
+
+print(remonte_chemin('ATGC','ATGA'))
+print(alignment('ATGC','ATGA'))
