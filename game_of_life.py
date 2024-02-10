@@ -127,12 +127,15 @@ class Pattern :
         lines = file.readlines()
         file.close()
         self.height = len(lines)
+        print (self.height, 'height')
         self.width = len(lines[0])
+        print (self.width, 'width')
         self.cells = []
 
         for x in range(self.height):
             line = []
             for y in range(self.width):
+                print ('step',x,y)
                 if lines[x][y] == '0':
                     line.append(Cell(x, y, False))
                 if lines[x][y]=='1':
@@ -161,7 +164,7 @@ class Display :
         for l in set_of_cells.cells:
             for cell in l:
                 if cell.alive:
-                    rect = pygame.Rect(cell.x*self.cell_height,cell.y*self.cell_width, 
+                    rect = pygame.Rect(cell.y*self.cell_width, cell.x*self.cell_height,
                                        self.cell_height, self.cell_width)
                     pygame.draw.rect(self.screen, self.alive_color, rect)
         pygame.display.update()
