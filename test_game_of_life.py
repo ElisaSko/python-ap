@@ -31,10 +31,10 @@ def test_Cell_update():
     assert set_of_cells.cells==[[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,0,0,0]]
 
 def test_global():
-    pattern =
-    set_of_cells = 
-    number_of_iterations =
+    pattern = gol.Pattern([[0,0,1],[0,1,1],[0,0,0]],3,3)
+    set_of_cells = gol.Set_Of_Cells([],3,3).initialize(pattern)
+    number_of_iterations = 3
     for i in range (number_of_iterations):
         set_of_cells.update()
-    result =
+    result = [[0,0,0],[0,1,1],[0,1,1]]
     assert set_of_cells.cells == result
